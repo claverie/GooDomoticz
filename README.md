@@ -19,6 +19,9 @@ All configurations elements are set in config.php.
 
 All credentials (Google and SMS) are stored in $HOME/.GooDomotiz.
 
+# Tools
+
+* ./analyse-db.php : display content of the orders DB
 
 # Todo
 
