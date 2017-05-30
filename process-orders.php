@@ -67,7 +67,7 @@ foreach ($orders as $order) {
             $log->Notify(sprintf("Domo: %s[%s]\nDomo: Prog=%s\nDomo: Status=%s",$order['Device'],$order['Order'],date("Y-m-d g:i.s",$order['Time']),($status["status"]?"OK":"KO")));
         }
         if ($status && !$simulation) {
-            $query = sprintf("DELETE FROM orders WHERE Id='%s';", $order['Id']);
+            $query = sprintf("DELETE FROM orders WHERE Id='%s' AND Time='%s';", $order['Id'], $order['Time']);
             $r = $db->ExecQuery($query);
             $log->Trace(sprintf("%s[%s] order has been removed",$order['Device'],$order['Order']));
         }
