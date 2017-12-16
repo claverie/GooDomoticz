@@ -10,8 +10,21 @@ class Domoticz {
     
     function __construct()
     {
-        $this->log = new Logs("Domoticz");
+        $this->log = new Logs("DM");
         
+        try {
+            $c = file_get_contents(DOMOTICZ_CONFIGURATION);
+            $this->configuration = json_decode($c, true);
+            if ($this->configuration === NULL) {
+                $msg = "Can't decode domoticz configuration file (".DOMOTICZ_CONFIGURATION.") [".json_last_error_msg()."]";
+                $log->Error($msg);
+                throw new Exception($msg);
+            }
+        } catch (Exception $e) {
+            $msg = "Can't open domoticz configuration file (".DOMOTICZ_CONFIGURATION.") [".$e->getMessage()."]";
+            $log->Error($msg);
+            throw new Exception($msg);
+        }
         $this->refCommand = array(
             "blinds"  => array( 
                 "up"   => "Off",  "open"  => "Off",
@@ -68,7 +81,10 @@ class Domoticz {
 
     function SendCommand($command="type=command&param=getSunRiseSet", $args=array())
     {
-        $command = "http://".DOMO_HOST."/json.htm?".vsprintf($command, $args);
+        $account = $this->configuration['user'].":".$this->configuration['password']."@";
+        $port = ($this->configuration['port'] != "" ? ":".$this->configuration['port'] : "");
+        $url = sprintf("%s://%s%s%s", $this->configuration['protocol'], $account, $this->configuration['host'], $port);
+        $command = $url."/json.htm?".vsprintf($command, $args);
         $this->log->Debug("Send command : $command");
         $json = file_get_contents($command);
         $res = json_decode($json);

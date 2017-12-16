@@ -16,7 +16,7 @@ function usage($proc) {
 $now  = time();
 $interval = ORDERS_PROCESSING_INTERVAL_SEC;
 
-$log = new Logs(basename($argv[0]));
+$log = new Logs("PO");
 
 $options = getopt("s:h");
 
@@ -24,7 +24,7 @@ if (isset($options['h'])) {
     usage($argv[0]);
     exit(1);
 }
-
+ 
 $simulation = false;
 $run_date = ""; 
 if (isset($options['s'])) {
@@ -44,6 +44,8 @@ if (!$db) exit(1);
 
 $orders = array();
 
+$debugMsg = sprintf("Retrieving orders [%s..%s]",date("Y-m-d g:i.s",$last),date("Y-m-d g:i.s",$now));
+$log->Debug($debugMsg);
 $query = sprintf("SELECT * from orders where Time > %d AND Time <= %d ".($simulation ? "" : "AND Status is NULL ORDER BY Time").";",$last,$now);
 $res = $db->ExecQuery($query);
 
@@ -51,7 +53,7 @@ $orders = array();
 while ($t = $res->fetchArray(SQLITE3_ASSOC)) {
     array_push($orders, $t);
 }
-$log->Info("From:".strftime('%Y-%m-%d %T',$last)." To: ".strftime('%Y-%m-%d %T',$now)." ($interval sec) : ".count($orders)." order(s) to process");
+$log->Info(strftime('%Y-%m-%d %T',$last)."..".strftime('%Y-%m-%d %T',$now)." ($interval sec) : ".count($orders)." order(s) to process");
 
 $domoticz = new Domoticz();
 

@@ -9,7 +9,7 @@ if (php_sapi_name() != 'cli') {
   throw new Exception('This application must be run on the command line.');
 }
 
-$log = new Logs(basename($argv[0]));
+$log = new Logs("GC");
 
 /**
  * Returns an authorized API client.

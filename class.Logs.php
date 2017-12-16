@@ -13,7 +13,7 @@ class Logs {
     
     function Debug($msg)
     {
-        if (getenv("DEBUG")!="") echo "%".$this->ident."% ".date("Y-m-d g:i.s")." $msg"."\n";
+        if (getenv("DEBUG")!="") echo $this->ident." %% ".date("Y-m-d g:i.s")." $msg"."\n";
     }
     
     function Info($msg)
@@ -34,7 +34,7 @@ class Logs {
     function Write($msg, $lvl=LOG_NOTICE)
     {
         syslog($lvl, "(".$this->ident.") ".$msg);
-        if (getenv("DEBUG")!="") echo ($lvl==LOG_NOTICE?"-".$this->ident."-":"*".$this->ident."*")." ".date("Ymd HM T")." $msg"."\n";
+        if (getenv("DEBUG")!="") echo ($lvl==LOG_NOTICE ? $this->ident." --" : " **".$this->ident."*")." ".date("Ymd HM T")." $msg"."\n";
     }
 
     function Notify($msg, $type="SMS")

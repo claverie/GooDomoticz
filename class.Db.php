@@ -9,7 +9,7 @@ class Db {
     
     function __construct()
     {
-        $this->log = new Logs("db");
+        $this->log = new Logs("DB");
         $this->db = false;
         try {
             $this->db = new SQLite3(ORDERS_DB_FILE, SQLITE3_OPEN_READWRITE);
